@@ -2,8 +2,6 @@ package tw.ouyang.simplebatchplatform.service;
 
 import java.io.File;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class BatchRunner implements Runnable {
 
     private String jarName;
