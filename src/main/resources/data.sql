@@ -1,0 +1,2 @@
+INSERT INTO DAILY_BATCH(ID, JAR_NAME, NOTE, HOUR, MINUTE, WAITING_BATCH_ID) VALUES('1', 'billsetuptask', 'create table BILL_STATEMENTS', '14', '00', null);
+INSERT INTO DAILY_BATCH(ID, JAR_NAME, NOTE, HOUR, MINUTE, WAITING_BATCH_ID) VALUES('2', 'billrun', 'insert data to table BILL_STATEMENTS', '16', '00', 'billsetuptask');
