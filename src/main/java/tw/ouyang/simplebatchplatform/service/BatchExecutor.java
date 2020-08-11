@@ -36,7 +36,7 @@ public class BatchExecutor {
     public void execute(DateTime dateTime) {
 
         System.out.println(waitingToRunBatchs.size());
-        
+
         for (Batch batch : waitingToRunBatchs) {
 
             if (dateTime.getHourOfDay() >= batch.getHour() && dateTime.getMinuteOfHour() >= batch.getMinute()) {

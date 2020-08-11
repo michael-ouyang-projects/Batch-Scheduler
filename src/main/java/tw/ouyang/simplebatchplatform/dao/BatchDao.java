@@ -17,7 +17,7 @@ public class BatchDao {
 
     public List<Batch> queryBatchsToRun() {
 
-        String sql = "SELECT ID, JAR_NAME, NOTE, HOUR, MINUTE, WAITING_BATCH_ID FROM DAILY_BATCH";
+        String sql = "SELECT JAR_NAME, NOTE, HOUR, MINUTE, WAITING_JAR FROM DAILY_BATCH";
         return jdbcTemplate.query(sql, new BatchRowMapper());
 
     }

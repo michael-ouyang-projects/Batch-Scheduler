@@ -2,20 +2,11 @@ package tw.ouyang.simplebatchplatform.model;
 
 public class Batch {
 
-    private String id;
     private String jarName;
     private String note;
     private Integer hour;
     private Integer minute;
-    private String waitingBatchId;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String waitingJar;
 
     public String getJarName() {
         return jarName;
@@ -49,12 +40,12 @@ public class Batch {
         this.minute = minute;
     }
 
-    public String getWaitingBatchId() {
-        return waitingBatchId;
+    public String getWaitingJar() {
+        return waitingJar;
     }
 
-    public void setWaitingBatchId(String waitingBatchId) {
-        this.waitingBatchId = waitingBatchId;
+    public void setWaitingJar(String waitingJar) {
+        this.waitingJar = waitingJar;
     }
 
 }
