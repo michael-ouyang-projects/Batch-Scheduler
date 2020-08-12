@@ -1,6 +1,7 @@
 package tw.ouyang.simplebatchplatform.service;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 public class BatchRunner implements Runnable {
 
@@ -21,7 +22,9 @@ public class BatchRunner implements Runnable {
 
             String command = String.format("java -jar %s.jar", jarName);
             System.out.println("Run '" + command + "' in " + directory);
+            TimeUnit.SECONDS.sleep(15);
             // Runtime.getRuntime().exec(command, null, directory);
+            System.out.println("Completed '" + command + "' in " + directory);
 
         } catch (Exception e) {
 

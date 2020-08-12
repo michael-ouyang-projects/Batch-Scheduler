@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,13 @@ public class PlatformContainer {
 
     }
 
+    @Bean(name = "runningBatchsFuture")
+    public List<Future<String>> runningBatchsFuture() {
+
+        return new ArrayList<>();
+
+    }
+
     @Bean(name = "waitingToRunBatchs")
     public List<Batch> waitingToRunBatchs() {
 
@@ -27,16 +35,16 @@ public class PlatformContainer {
 
     }
 
-    @Bean(name = "runningBatchs")
-    public List<Batch> runningBatchs() {
+    @Bean(name = "runningBatchsId")
+    public List<String> runningBatchs() {
 
-        return new ArrayList<Batch>();
+        return new ArrayList<String>();
     }
 
-    @Bean(name = "completedBatchs")
-    public List<Batch> completedBatchs() {
+    @Bean(name = "completedBatchsId")
+    public List<String> completedBatchs() {
 
-        return new ArrayList<Batch>();
+        return new ArrayList<String>();
 
     }
 

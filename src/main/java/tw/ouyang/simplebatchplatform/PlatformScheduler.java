@@ -27,7 +27,7 @@ public class PlatformScheduler {
     @Qualifier("waitingToRunBatchs")
     private List<Batch> waitingToRunBatchs;
 
-    @Scheduled(cron = "0 40 15 * * *")
+    @Scheduled(cron = "20 44 11 * * *")
     public void getTodayBatchs() {
 
         waitingToRunBatchs.addAll(batchDao.queryBatchsToRun());
@@ -35,9 +35,16 @@ public class PlatformScheduler {
     }
 
     @Scheduled(fixedRate = 10000)
-    public void checkAndRunBatchs() {
+    public void harvestCompletedBatchs() {
 
-        batchExecutor.execute(new DateTime());
+        batchExecutor.harvestCompletedBatchs();
+
+    }
+
+    @Scheduled(fixedRate = 10000)
+    public void executeWaitingBatchs() {
+
+        batchExecutor.executeWaitingBatchs(new DateTime());
 
     }
 
