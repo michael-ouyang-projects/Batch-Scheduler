@@ -37,8 +37,6 @@ public class BatchRunner implements Runnable {
 
             }
 
-            // TimeUnit.SECONDS.sleep(15);
-
         } catch (Exception e) {
 
             e.printStackTrace();
