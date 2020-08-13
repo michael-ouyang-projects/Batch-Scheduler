@@ -1,6 +1,9 @@
 package tw.ouyang.simplebatchplatform.api;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,6 +26,24 @@ public class ShowInfoApi {
     @Autowired
     @Qualifier("completedBatchList")
     private List<String> completedBatchList;
+
+    @GetMapping("/")
+    public Map<String, List<String>> showBatchsInfo() {
+
+        Map<String, List<String>> batchMap = new TreeMap<>();
+
+        batchMap.put("waiting",
+                waitingBatchList
+                        .stream()
+                        .map(batch -> batch.getJarName())
+                        .collect(Collectors.toList()));
+
+        batchMap.put("running", runningBatchList);
+        batchMap.put("completed", completedBatchList);
+
+        return batchMap;
+
+    }
 
     @GetMapping("/waiting")
     public List<Batch> showWaitingBatchsInfo() {

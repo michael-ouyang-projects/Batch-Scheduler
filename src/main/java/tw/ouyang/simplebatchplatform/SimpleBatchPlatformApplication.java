@@ -23,8 +23,8 @@ public class SimpleBatchPlatformApplication {
 
         return args -> {
 
-            TimeUnit.SECONDS.sleep(2);
-            platformScheduler.getTodayBatchs();
+            TimeUnit.SECONDS.sleep(5);
+            platformScheduler.init();
 
         };
 

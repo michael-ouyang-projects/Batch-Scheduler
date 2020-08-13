@@ -1,7 +1,6 @@
 package tw.ouyang.simplebatchplatform.service;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +25,19 @@ public class BatchRunner implements Runnable {
 
             String command = String.format("java -jar %s.jar", jarName);
             logger.info(String.format("Run '%s' in '%s'.", command, directory));
-            // Runtime.getRuntime().exec(command, null, directory);
-            TimeUnit.SECONDS.sleep(15);
-            logger.info(String.format("Completed running '%s' in '%s'.", command, directory));
+            Process process = Runtime.getRuntime().exec(command, null, directory);
+            int returnCode = process.waitFor();
+            if (returnCode == 0) {
+
+                logger.info(String.format("Completed running '%s' in '%s' successfully.", command, directory));
+
+            } else {
+
+                logger.info(String.format("Error running '%s' in '%s'.", command, directory));
+
+            }
+
+            // TimeUnit.SECONDS.sleep(15);
 
         } catch (Exception e) {
 

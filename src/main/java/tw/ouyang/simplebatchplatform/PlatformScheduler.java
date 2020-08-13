@@ -31,8 +31,27 @@ public class PlatformScheduler {
     @Qualifier("waitingBatchList")
     private List<Batch> waitingBatchList;
 
+    @Autowired
+    @Qualifier("completedBatchList")
+    private List<String> completedBatchList;
+
     @Scheduled(cron = "0 0 0 * * *")
-    public void getTodayBatchs() {
+    public void init() {
+
+        clearCompletedBatchs();
+        getTodayBatchs();
+
+    }
+
+    private void clearCompletedBatchs() {
+
+        logger.info("Clear Completed-Batch-List.");
+        completedBatchList.clear();
+        logger.info("Finished clearing Completed-Batch-List.");
+
+    }
+
+    private void getTodayBatchs() {
 
         logger.info("Get batchs to run.");
         waitingBatchList.addAll(batchDao.queryBatchsToRun());
@@ -44,14 +63,14 @@ public class PlatformScheduler {
 
     }
 
-    @Scheduled(fixedRate = 10000, initialDelay = 5000)
+    @Scheduled(fixedRate = 10000, initialDelay = 10000)
     private void harvestCompletedBatchs() {
 
         batchExecutor.harvestCompletedBatchs();
 
     }
 
-    @Scheduled(fixedRate = 10000, initialDelay = 5000)
+    @Scheduled(fixedRate = 10000, initialDelay = 10000)
     private void executeWaitingBatchs() {
 
         batchExecutor.executeWaitingBatchs(new DateTime());
