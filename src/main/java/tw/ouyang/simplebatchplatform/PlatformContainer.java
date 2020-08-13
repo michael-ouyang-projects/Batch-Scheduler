@@ -21,28 +21,28 @@ public class PlatformContainer {
 
     }
 
-    @Bean(name = "runningBatchFutures")
-    public List<Future<String>> runningBatchFutures() {
-
-        return new ArrayList<>();
-
-    }
-
-    @Bean(name = "waitingToRunBatchs")
-    public List<Batch> waitingToRunBatchs() {
+    @Bean(name = "waitingBatchList")
+    public List<Batch> waitingBatchList() {
 
         return new ArrayList<Batch>();
 
     }
 
-    @Bean(name = "runningBatchIds")
-    public List<String> runningBatchIds() {
+    @Bean(name = "runningBatchList")
+    public List<String> runningBatchList() {
 
         return new ArrayList<String>();
     }
 
-    @Bean(name = "completedBatchIds")
-    public List<String> completedBatchIds() {
+    @Bean(name = "runningBatchFutureList")
+    public List<Future<String>> runningBatchFutureList() {
+
+        return new ArrayList<>();
+
+    }
+
+    @Bean(name = "completedBatchList")
+    public List<String> completedBatchList() {
 
         return new ArrayList<String>();
 

@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.function.Predicate;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +21,8 @@ import tw.ouyang.simplebatchplatform.model.Batch;
 @Component
 public class BatchExecutor {
 
+    private static Logger logger = LoggerFactory.getLogger(BatchExecutor.class);
+
     @Value("${batch.directory}")
     private File directory;
 
@@ -25,40 +30,47 @@ public class BatchExecutor {
     private ExecutorService executorService;
 
     @Autowired
-    @Qualifier("runningBatchFutures")
-    private List<Future<String>> runningBatchFutures;
+    @Qualifier("waitingBatchList")
+    private List<Batch> waitingBatchList;
 
     @Autowired
-    @Qualifier("waitingToRunBatchs")
-    private List<Batch> waitingToRunBatchs;
+    @Qualifier("runningBatchList")
+    private List<String> runningBatchList;
 
     @Autowired
-    @Qualifier("runningBatchIds")
-    private List<String> runningBatchIds;
+    @Qualifier("runningBatchFutureList")
+    private List<Future<String>> runningBatchFutureList;
 
     @Autowired
-    @Qualifier("completedBatchIds")
-    private List<String> completedBatchIds;
+    @Qualifier("completedBatchList")
+    private List<String> completedBatchList;
 
     public void harvestCompletedBatchs() {
 
-        runningBatchFutures
+        Predicate<Future<String>> isDone = batchFuture -> batchFuture.isDone();
+
+        runningBatchFutureList
                 .stream()
-                .filter(batchFuture -> {
-                    return batchFuture.isDone();
-                }).forEach(batchFuture -> {
+                .filter(isDone)
+                .forEach(batchFuture -> {
                     try {
-                        completedBatchIds.add(batchFuture.get());
+                        String jarName = batchFuture.get();
+                        completedBatchList.add(jarName);
+                        runningBatchList.remove(jarName);
+                        logger.info(String.format("Put '%s' to Completed-Batch-List", jarName));
+                        logger.info(String.format("Remove '%s' from Running-Batch-List", jarName));
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
                 });
 
+        runningBatchFutureList.removeIf(isDone);
+
     }
 
     public void executeWaitingBatchs(DateTime dateTime) {
 
-        Iterator<Batch> batchIterator = waitingToRunBatchs.iterator();
+        Iterator<Batch> batchIterator = waitingBatchList.iterator();
 
         while (batchIterator.hasNext()) {
 
@@ -68,11 +80,14 @@ public class BatchExecutor {
 
                 if (noWaitingBatch(batch) || waitingBatchCompleted(batch)) {
 
-                    BatchRunner runner = new BatchRunner(batch.getJarName(), directory);
-                    Future<String> batchFuture = executorService.submit(runner, batch.getJarName());
-                    runningBatchFutures.add(batchFuture);
-                    runningBatchIds.add(batch.getJarName());
+                    String jarName = batch.getJarName();
+                    BatchRunner runner = new BatchRunner(jarName, directory);
+                    Future<String> batchFuture = executorService.submit(runner, jarName);
+                    runningBatchList.add(jarName);
+                    runningBatchFutureList.add(batchFuture);
                     batchIterator.remove();
+                    logger.info(String.format("Put '%s' to Running-Batch-List", jarName));
+                    logger.info(String.format("Remove '%s' from Waiting-Batch-List", jarName));
 
                 }
             }
@@ -93,7 +108,7 @@ public class BatchExecutor {
 
     private boolean waitingBatchCompleted(Batch batch) {
 
-        return completedBatchIds.contains(batch.getWaitingJar());
+        return completedBatchList.contains(batch.getWaitingJar());
 
     }
 
