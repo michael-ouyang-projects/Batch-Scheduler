@@ -25,30 +25,30 @@ public class BatchExecutor {
     private ExecutorService executorService;
 
     @Autowired
-    @Qualifier("runningBatchsFuture")
-    private List<Future<String>> runningBatchsFuture;
+    @Qualifier("runningBatchFutures")
+    private List<Future<String>> runningBatchFutures;
 
     @Autowired
     @Qualifier("waitingToRunBatchs")
     private List<Batch> waitingToRunBatchs;
 
     @Autowired
-    @Qualifier("runningBatchsId")
-    private List<String> runningBatchsId;
+    @Qualifier("runningBatchIds")
+    private List<String> runningBatchIds;
 
     @Autowired
-    @Qualifier("completedBatchsId")
-    private List<String> completedBatchsId;
+    @Qualifier("completedBatchIds")
+    private List<String> completedBatchIds;
 
     public void harvestCompletedBatchs() {
 
-        runningBatchsFuture
+        runningBatchFutures
                 .stream()
                 .filter(batchFuture -> {
                     return batchFuture.isDone();
                 }).forEach(batchFuture -> {
                     try {
-                        completedBatchsId.add(batchFuture.get());
+                        completedBatchIds.add(batchFuture.get());
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
@@ -70,8 +70,8 @@ public class BatchExecutor {
 
                     BatchRunner runner = new BatchRunner(batch.getJarName(), directory);
                     Future<String> batchFuture = executorService.submit(runner, batch.getJarName());
-                    runningBatchsFuture.add(batchFuture);
-                    runningBatchsId.add(batch.getJarName());
+                    runningBatchFutures.add(batchFuture);
+                    runningBatchIds.add(batch.getJarName());
                     batchIterator.remove();
 
                 }
@@ -93,7 +93,7 @@ public class BatchExecutor {
 
     private boolean waitingBatchCompleted(Batch batch) {
 
-        return completedBatchsId.contains(batch.getWaitingJar());
+        return completedBatchIds.contains(batch.getWaitingJar());
 
     }
 

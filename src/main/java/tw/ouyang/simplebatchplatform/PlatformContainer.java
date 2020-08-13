@@ -21,8 +21,8 @@ public class PlatformContainer {
 
     }
 
-    @Bean(name = "runningBatchsFuture")
-    public List<Future<String>> runningBatchsFuture() {
+    @Bean(name = "runningBatchFutures")
+    public List<Future<String>> runningBatchFutures() {
 
         return new ArrayList<>();
 
@@ -35,14 +35,14 @@ public class PlatformContainer {
 
     }
 
-    @Bean(name = "runningBatchsId")
-    public List<String> runningBatchs() {
+    @Bean(name = "runningBatchIds")
+    public List<String> runningBatchIds() {
 
         return new ArrayList<String>();
     }
 
-    @Bean(name = "completedBatchsId")
-    public List<String> completedBatchs() {
+    @Bean(name = "completedBatchIds")
+    public List<String> completedBatchIds() {
 
         return new ArrayList<String>();
 
