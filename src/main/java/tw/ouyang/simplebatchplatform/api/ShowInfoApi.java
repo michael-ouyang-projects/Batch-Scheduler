@@ -28,7 +28,7 @@ public class ShowInfoApi {
     private List<String> completedBatchList;
 
     @GetMapping("/")
-    public Map<String, List<String>> showBatchsInfo() {
+    public Map<String, List<String>> showAllBatchesInfo() {
 
         Map<String, List<String>> batchMap = new TreeMap<>();
 
@@ -46,21 +46,21 @@ public class ShowInfoApi {
     }
 
     @GetMapping("/waiting")
-    public List<Batch> showWaitingBatchsInfo() {
+    public List<Batch> showWaitingBatchesInfo() {
 
         return waitingBatchList;
 
     }
 
     @GetMapping("/running")
-    public List<String> showRunningBatchsInfo() {
+    public List<String> showRunningBatchesInfo() {
 
         return runningBatchList;
 
     }
 
     @GetMapping("/completed")
-    public List<String> showCompletedBatchsInfo() {
+    public List<String> showCompletedBatchesInfo() {
 
         return completedBatchList;
 

@@ -45,7 +45,7 @@ public class BatchExecutor {
     @Qualifier("completedBatchList")
     private List<String> completedBatchList;
 
-    public void harvestCompletedBatchs() {
+    public void harvestCompletedBatches() {
 
         Predicate<Future<String>> isDone = batchFuture -> batchFuture.isDone();
 
@@ -68,30 +68,33 @@ public class BatchExecutor {
 
     }
 
-    public void executeWaitingBatchs(DateTime dateTime) {
+    public void executeWaitingBatches(DateTime dateTime) {
 
         Iterator<Batch> batchIterator = waitingBatchList.iterator();
 
         while (batchIterator.hasNext()) {
 
             Batch batch = batchIterator.next();
+            String jarName = batch.getJarName();
 
-            if (isTimeUp(dateTime, batch)) {
+            if (canExecute(dateTime, batch)) {
 
-                if (noWaitingBatch(batch) || waitingBatchCompleted(batch)) {
+                BatchRunner runner = new BatchRunner(jarName, directory);
+                Future<String> batchFuture = executorService.submit(runner, jarName);
+                runningBatchList.add(jarName);
+                runningBatchFutureList.add(batchFuture);
+                batchIterator.remove();
+                logger.info(String.format("Put '%s' to Running-Batch-List", jarName));
+                logger.info(String.format("Remove '%s' from Waiting-Batch-List", jarName));
 
-                    String jarName = batch.getJarName();
-                    BatchRunner runner = new BatchRunner(jarName, directory);
-                    Future<String> batchFuture = executorService.submit(runner, jarName);
-                    runningBatchList.add(jarName);
-                    runningBatchFutureList.add(batchFuture);
-                    batchIterator.remove();
-                    logger.info(String.format("Put '%s' to Running-Batch-List", jarName));
-                    logger.info(String.format("Remove '%s' from Waiting-Batch-List", jarName));
-
-                }
             }
         }
+    }
+
+    private boolean canExecute(DateTime dateTime, Batch batch) {
+
+        return isTimeUp(dateTime, batch) && (noWaitingBatch(batch) || waitingBatchCompleted(batch));
+
     }
 
     private boolean isTimeUp(DateTime dateTime, Batch batch) {
