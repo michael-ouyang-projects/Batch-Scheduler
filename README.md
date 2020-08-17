@@ -1,7 +1,7 @@
-# Simple-Batch-Platform
+# Batch-Scheduler
 
 ## Purpose
-#### This is a batch-platform that can execute jar files in specific time and dependency order.
+#### This is a Batch-Scheduler that can execute jar files in specific time and dependency order.
 
 ---
 
