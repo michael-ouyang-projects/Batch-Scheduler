@@ -1,7 +1,7 @@
 # Batch-Scheduler
 
 ## Purpose
-#### This is a Batch-Scheduler that can execute java archives in specific time and dependency order.
+#### This is a Batch-Scheduler that can execute java archives at specific time and dependency order.
 
 ---
 
